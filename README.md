@@ -32,7 +32,7 @@ El resto de herramientas (`hclear`, `update_os`, `mkvenv` y utilidades de teclad
 
 El instalador detecta dinámicamente tu usuario y configura tanto `.zshrc` como `.bashrc`, garantizando que las herramientas estén disponibles incluso al escalar privilegios con `sudo su`.
 ```bash
-git clone [https://github.com/TU_USUARIO/red-team-arsenal.git](https://github.com/TU_USUARIO/red-team-arsenal.git)
+git clone https://github.com/IvanPerea23/red-team-arsenal
 cd red-team-arsenal
 sudo python3 install_arsenal.py
 source ~/.zshrc # o ~/.bashrc
