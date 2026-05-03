@@ -15,6 +15,19 @@ He creado varias utilidades para agilizar mis auditorías y asegurar mi entorno:
 *   **`mkvenv`**: Automatización segura de entornos virtuales en Python que evita romper el sistema base de Kali/Debian, actualiza `pip` y detecta archivos `requirements.txt` automáticamente.
 *   **Gestión de Teclado**: Funciones rápidas (`set_latam`, `set_us`, `set_es`) para alternar distribuciones de teclado en entornos gráficos sin perder tiempo en menús.
 
+## 🤝 Créditos y Atribuciones (S4vitar Style)
+
+Este entorno de trabajo está inspirado en las metodologías de agilidad y eficiencia del *Pentesting*. Por ello, quiero dejar estipulado y dar el crédito correspondiente a **Marcelo Vázquez (S4vitar)**, creador de la academia Hack4u y referente en la comunidad de ciberseguridad, por la lógica y el diseño de las siguientes herramientas indispensables que he integrado en la categoría de *Pentest Arsenal*:
+
+*   **`extractPorts`**: Funcionalidad icónica diseñada por S4vitar para extraer, limpiar y copiar al portapapeles de manera instantánea los puertos abiertos desde archivos "grepables" de Nmap (`.gnmap`).
+*   **`whichSystem`**: Herramienta de enumeración pasiva basada en la técnica de S4vitar que evalúa el TTL (Time To Live) de las trazas ICMP para determinar si el sistema objetivo es Linux o Windows.
+*   **`mkt` (Make Target)**: Lógica de creación ágil de entornos de trabajo que despliega instantáneamente la estructura de carpetas estándar (`nmap`, `content`, `exploits`, `scripts`) recomendada por S4vitar para la resolución de máquinas (HTB, VulnHub, etc.).
+
+> *"El conocimiento es libre y en la comunidad nos apoyamos mutuamente para ser más eficientes."* - Puedes encontrar el trabajo original de S4vitar en su [GitHub](https://github.com/s4vitar) o en [Hack4u](https://hack4u.io/).
+
+El resto de herramientas (`hclear`, `update_os`, `mkvenv` y utilidades de teclado) son desarrollos propios creados para complementar este flujo de trabajo.
+
+
 ## ⚙️ Instalación Universal (Multi-Shell & Multi-User)
 
 El instalador detecta dinámicamente tu usuario y configura tanto `.zshrc` como `.bashrc`, garantizando que las herramientas estén disponibles incluso al escalar privilegios con `sudo su`.
