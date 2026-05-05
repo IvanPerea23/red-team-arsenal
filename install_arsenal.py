@@ -39,7 +39,6 @@ hclear() {
     echo -e "\\e[1;33m[*] Modo Incógnito Activado (Historial erradicado)\\e[0m"
 }
 
-# Renombrado a update_os para ser genérico (Kali, Parrot, Ubuntu, etc.)
 update_os() {
     sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y && sudo apt autoclean -y
     echo -e "\\e[1;32m[+] Sistema actualizado. Reiniciando en 5s...\\e[0m"
@@ -107,20 +106,31 @@ def configure_shell(home_dir, username):
     
     for rc in rc_files:
         rc_path = os.path.join(home_dir, rc)
-        if os.path.exists(rc_path):
-            with open(rc_path, "r") as f:
-                content = f.read()
+        
+        # Si el archivo no existe, lo creamos para evitar problemas
+        if not os.path.exists(rc_path):
+            try:
+                open(rc_path, 'a').close()
+                # Ajustar permisos si lo creamos siendo root en el home de otro usuario
+                if username != "root":
+                    user_info = pwd.getpwnam(username)
+                    os.chown(rc_path, user_info.pw_uid, user_info.pw_gid)
+            except IOError:
+                continue
 
-            if "CARGA AUTOMÁTICA DEL ARSENAL" not in content:
-                with open(rc_path, "a") as f:
-                    f.write(RC_BLOCK)
-                print(f"[*] Inyectando bloque de carga en {rc_path} (Usuario: {username})")
-            else:
-                print(f"[*] El archivo {rc_path} ya está configurado (Usuario: {username}).")
-            configured = True
+        with open(rc_path, "r") as f:
+            content = f.read()
+
+        if "CARGA AUTOMÁTICA DEL ARSENAL" not in content:
+            with open(rc_path, "a") as f:
+                f.write(RC_BLOCK)
+            print(f"[*] Inyectando bloque de carga en {rc_path} (Usuario: {username})")
+        else:
+            print(f"[*] El archivo {rc_path} ya está configurado (Usuario: {username}).")
+        configured = True
             
     if not configured:
-        print(f"[i] No se encontraron archivos .zshrc o .bashrc en {home_dir}")
+        print(f"[i] No se pudieron configurar archivos para {username} en {home_dir}")
 
 def install():
     print("╔════════════════════════════════════════════════╗")
@@ -160,18 +170,18 @@ def install():
             f.write("#!/bin/bash\n" + content)
         os.chmod(filepath, 0o755)
 
-    print("\n[*] 5/5 Configurando perfiles de usuario (Multi-Shell)")
+    print("\n[*] 5/5 Configurando perfiles de usuario (Multi-Shell & Multi-User)")
     
-    # Configurar al usuario que invocó sudo (ej: ivan, kali, parrot)
-    sudo_user = os.environ.get('SUDO_USER')
-    if sudo_user:
-        # pwd.getpwnam obtiene la ruta real del HOME sin adivinar
-        user_info = pwd.getpwnam(sudo_user)
-        configure_shell(user_info.pw_dir, sudo_user)
-    
-    # Configurar SIEMPRE al usuario root (vital para pentesting)
+    # Configurar SIEMPRE al usuario root
     root_info = pwd.getpwuid(0)
     configure_shell(root_info.pw_dir, "root")
+
+    # Escanear el sistema y configurar TODOS los usuarios humanos reales (UID >= 1000)
+    for p in pwd.getpwall():
+        if 1000 <= p.pw_uid <= 60000:
+            # Ignoramos usuarios de sistema sin shell interactiva
+            if "nologin" not in p.pw_shell and "false" not in p.pw_shell:
+                configure_shell(p.pw_dir, p.pw_name)
 
     print("\n[+] ¡Instalación completada con éxito!")
     print("[+] Las herramientas están disponibles para tu usuario normal y para root.")
