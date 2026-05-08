@@ -48,7 +48,7 @@ update_os() {
 
     "3_workspace_utils.sh": """# Gestión de Entorno y Directorios
 mkt() {
-    mkdir -p "$1"/{nmap,content,exploits,scripts} && cd "$1" && echo -e "\\e[1;32m[+] Workspace '$1' creado.\\e[0m"
+    mkdir {nmap,content,exploits,scripts} 
 }
 
 mkvenv() {
